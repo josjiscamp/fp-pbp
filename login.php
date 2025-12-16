@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 password_verify($password, $user["password"]) ||
                 $password === $user["password"] // ⚠️ remove this after hashing all passwords
             ) {
-                $_SESSION["user_id"] = $user["id"];
+                $_SESSION["user_id"] = $user["_id"];
                 $_SESSION["email"] = $user["email"];
 
                 header("Location: server/products/read.php");

@@ -69,6 +69,12 @@ $result = $conn->query("SELECT * FROM categories");
             <i class="fas fa-plus"></i> Add Category
         </a>
     </div>
+    <!-- Logout -->
+        <a href="../users/logout.php"
+           class="btn btn-outline-danger"
+           onclick="return confirm('Are you sure you want to logout?')">
+            <i class="fas fa-right-from-bracket me-1"></i> Logout
+        </a>
     </div>
 
     <!-- Category Grid -->
