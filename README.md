@@ -36,5 +36,39 @@ Tujuan utama pengembangan website ini adalah mencegah food waste, meningkatkan k
 - 🔴 Laravel
 - 📡 REST API
 - 🐬 MySQL
+##  🖼Front end
+1. 📄 HTML (Struktur Halaman)
+   - 🔹index.html = Menjadi halaman awal (landing page) aplikasi Food Expiry Tracker
+   - 🔹login.html = Menyediakan form untuk proses login pengguna.
+   - 🔹register.html = Menyediakan form pendaftaran akun baru.
+   - 🔹dashboard.html = Menampilkan halaman utama pengelolaan data makanan.
+   - 🔹recipe-finder.html = Menampilkan fitur pencarian resep berdasarkan bahan.
+   - 🔹settings.html = Menyediakan halaman pengaturan pengguna.
+   - 🔹help-center.html = Menampilkan halaman bantuan dan FAQ.
+   - 🔹privacy-policy.html = Menampilkan kebijakan privasi aplikasi.
+   - 🔹terms-of-service.html = Menampilkan syarat dan ketentuan penggunaan aplikasi.
+2. 🎨 CSS (Tampilan & Responsivitas)
+   - 🔹landing.css = Mengatur tampilan halaman awal aplikasi.
+   - 🔹auth.css = Mengatur tampilan halaman login dan register.
+   - 🔹dashboard.css = Mengatur tampilan dashboard utama
+3. ⚡ JavaScript (Logika Aplikasi)
+   - utils.js = Membantu menjaga kode tetap rapi dan terstruktur.
+   - auth.js = Menggunakan event handling dan localStorage
+   - landing.js = Berisi event listener sederhana dan pemanggilan fungsi JavaScript lain.
+   - guest-mode.js = Memungkinkan pengguna mengakses aplikasi tanpa login akun.
+   - dashboard.js = Mengelola data client-side dan rendering dinamis.
+   - notifications.js = Memberi peringatan kepada pengguna jika ada makanan yang hampir atau sudah kadaluarsa.
+   - email-notifications.js = Mengirim notifikasi melalui email.
+   - recipe-finder.js = Mengolah input pencarian dan menampilkan hasil
+   - settings.js = Mengelola pengaturan pengguna.
+   - sound-notifications.js = Menyediakan notifikasi suara.
+
+
+
+
+
+
+
+
 
 
