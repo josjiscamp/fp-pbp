@@ -41,6 +41,14 @@
 <body>
 
 <?php
+session_start();
+
+/* Protect page */
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../login.php");
+    exit;
+}
+
 include '../conn.php';
 $result = $conn->query("
     SELECT 
@@ -69,6 +77,12 @@ $result = $conn->query("
                 <i class="fas fa-plus me-1"></i> Add Product
             </a>
         </div>
+        <!-- Logout -->
+        <a href="../users/logout.php"
+           class="btn btn-outline-danger"
+           onclick="return confirm('Are you sure you want to logout?')">
+            <i class="fas fa-right-from-bracket me-1"></i> Logout
+        </a>
     </div>
 
     <!-- Product Grid -->

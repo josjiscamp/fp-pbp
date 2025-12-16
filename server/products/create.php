@@ -36,6 +36,14 @@
 <body>
 
 <?php
+session_start();
+
+/* Protect page */
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../../login.php");
+    exit;
+}
+
 include '../conn.php';
 
 $categories = $conn->query("SELECT _id, name FROM categories");
