@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FET - Food Expiry Tracker | Stop Food Waste, Start Smart Living</title>
+    <title>FET | Add Product</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- AOS CSS -->
+    <!-- AOS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <!-- Google Fonts -->
@@ -19,8 +19,21 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/landing.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+        }
+        .form-card {
+            border-radius: 18px;
+        }
+        .form-header i {
+            color: #10b981;
+        }
+    </style>
 </head>
-<body class="p-4">
+<body>
 
 <?php
 include '../conn.php';
@@ -38,49 +51,79 @@ if (isset($_POST['submit'])) {
         header("Location: read.php");
         exit;
     } else {
-        echo "<div class='alert alert-danger'>Error: " . $conn->error . "</div>";
+        echo "<div class='alert alert-danger text-center'>Error: {$conn->error}</div>";
     }
 }
 ?>
 
-<div class="container col-md-5">
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7" data-aos="fade-up">
 
-    <h3 class="mb-4 text-center">Add New Product</h3>
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <div class="form-header mb-2">
+                    <i class="fas fa-plus-circle fa-3x"></i>
+                </div>
+                <h3 class="fw-bold">Add New Product</h3>
+                <p class="text-muted">Keep your inventory up to date</p>
+            </div>
 
-    <form method="POST" class="card p-4 shadow-sm">
+            <!-- Card -->
+            <form method="POST" class="card form-card shadow-sm p-4">
 
-        <div class="mb-3">
-            <label for="categories" class="form-label">Category</label>
-            <select name="category_id" id="categories" class="form-select" required>
-                <?php while($row = $categories->fetch_assoc()): ?>
-                    <option value="<?= $row['_id']; ?>">
-                        <?= htmlspecialchars($row['name']); ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
+                <div class="mb-3">
+                    <label class="form-label fw-medium">
+                        <i class="fas fa-tags me-1"></i> Category
+                    </label>
+                    <select name="category_id" class="form-select" required>
+                        <?php while($row = $categories->fetch_assoc()): ?>
+                            <option value="<?= $row['_id']; ?>">
+                                <?= htmlspecialchars($row['name']); ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-medium">
+                        <i class="fas fa-box me-1"></i> Product Name
+                    </label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        class="form-control" 
+                        placeholder="e.g. Milk, Cheese, Bread"
+                        required
+                    >
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="read.php" class="btn btn-outline-secondary w-50">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <button type="submit" name="submit" class="btn btn-primary w-50">
+                        <i class="fas fa-save"></i> Save Product
+                    </button>
+                </div>
+
+            </form>
+
         </div>
-
-        <div class="mb-3">
-            <label class="form-label">Product Name</label>
-            <input type="text" name="name" class="form-control" required>
-        </div>
-
-        <div class="d-flex justify-content-between">
-            <a href="read.php" class="btn btn-secondary">Back</a>
-            <button type="submit" name="submit" class="btn btn-primary">Save</button>
-        </div>
-
-    </form>
+    </div>
 </div>
 
-<!-- Bootstrap JS -->
+<!-- Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- AOS JS -->
+<!-- AOS -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-<!-- Custom JS -->
-<script src="js/landing.js"></script>
+<script>
+    AOS.init({
+        duration: 900,
+        once: true
+    });
+</script>
 
 </body>
 </html>

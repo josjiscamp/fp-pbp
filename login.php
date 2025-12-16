@@ -1,231 +1,136 @@
+<?php
+session_start();
+require_once "server/conn.php"; // 🔒 using your existing connection file
+
+$error = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
+
+    if ($email === "" || $password === "") {
+        $error = "Email and password are required.";
+    } else {
+        // ✅ Prepared statement (NO SQL injection)
+        $stmt = $conn->prepare("SELECT _id, email, password FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows === 1) {
+            $user = $result->fetch_assoc();
+
+            // ✅ If your DB still uses plain password, TEMPORARY fallback included
+            if (
+                password_verify($password, $user["password"]) ||
+                $password === $user["password"] // ⚠️ remove this after hashing all passwords
+            ) {
+                $_SESSION["user_id"] = $user["id"];
+                $_SESSION["email"] = $user["email"];
+
+                header("Location: server/products/read.php");
+                exit;
+            } else {
+                $error = "Invalid email or password.";
+            }
+        } else {
+            $error = "Invalid email or password.";
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - FET | Food Expiry Tracker</title>
-    
-    <!-- Bootstrap CSS -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/auth.css">
-    <script src="js/guest-mode.js"></script>
 </head>
 <body>
-    
-    <!-- Background Animation -->
-    <div class="auth-background">
-        <div class="floating-shape shape-1"></div>
-        <div class="floating-shape shape-2"></div>
-        <div class="floating-shape shape-3"></div>
-        <div class="floating-shape shape-4"></div>
-    </div>
 
-    <!-- Back to Home Button -->
-    <a href="index.php" class="btn-back-home">
-        <i class="fas fa-arrow-left"></i> Back to Home
-    </a>
+<!-- Background Animation -->
+<div class="auth-background">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+    <div class="floating-shape shape-4"></div>
+</div>
 
-    <!-- Login Container -->
-    <div class="auth-container">
-        <div class="container">
-            <div class="row justify-content-center align-items-center min-vh-100">
-                <div class="col-lg-10">
-                    <div class="auth-card">
-                        <div class="row g-0">
-                            
-                            <!-- Left Side - Illustration -->
-                            <div class="col-lg-6 d-none d-lg-block">
-                                <div class="auth-illustration">
-                                    <div class="illustration-content">
-                                        <div class="brand-logo">
-                                            <h2>FET</h2>
-                                        </div>
-                                        <h3 class="illustration-title">Welcome Back!</h3>
-                                        <p class="illustration-subtitle">
-                                            Login to continue managing your food inventory and reducing waste.
-                                        </p>
-                                        
-                                        <!-- Animated Food Icons -->
-                                        <div class="food-icons">
-                                            <div class="food-icon icon-1">
-                                                <i class="fas fa-apple-alt"></i>
-                                            </div>
-                                            <div class="food-icon icon-2">
-                                                <i class="fas fa-carrot"></i>
-                                            </div>
-                                            <div class="food-icon icon-3">
-                                                <i class="fas fa-cheese"></i>
-                                            </div>
-                                            <div class="food-icon icon-4">
-                                                <i class="fas fa-drumstick-bite"></i>
-                                            </div>
-                                            <div class="food-icon icon-5">
-                                                <i class="fas fa-bread-slice"></i>
-                                            </div>
-                                            <div class="food-icon icon-6">
-                                                <i class="fas fa-fish"></i>
-                                            </div>
-                                        </div>
+<a href="index.php" class="btn-back-home">
+    <i class="fas fa-arrow-left"></i> Back to Home
+</a>
 
-                                        <!-- Stats Preview -->
-                                        <div class="stats-preview">
-                                            <div class="stat-item">
-                                                <i class="fas fa-users"></i>
-                                                <span>500+ Users</span>
-                                            </div>
-                                            <div class="stat-item">
-                                                <i class="fas fa-leaf"></i>
-                                                <span>75% Less Waste</span>
-                                            </div>
-                                        </div>
-                                    </div>
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-10">
+                <div class="auth-card">
+                    <div class="row g-0">
+
+                        <!-- LEFT -->
+                        <div class="col-lg-6 d-none d-lg-block">
+                            <div class="auth-illustration">
+                                <div class="illustration-content">
+                                    <h2>FET</h2>
+                                    <h3>Welcome Back!</h3>
+                                    <p>Login to continue managing your food inventory.</p>
                                 </div>
                             </div>
-
-                            <!-- Right Side - Login Form -->
-                            <div class="col-lg-6">
-                                <div class="auth-form-wrapper">
-                                    
-                                    <!-- Mobile Logo -->
-                                    <div class="mobile-logo d-lg-none text-center mb-4">
-                                        <i class="fas fa-apple-alt"></i>
-                                        <h2>FET</h2>
-                                    </div>
-
-                                    <div class="auth-header">
-                                        <h1 class="auth-title">Sign In</h1>
-                                        <p class="auth-subtitle">Enter your credentials to access your account</p>
-                                    </div>
-
-                                    <!-- Alert Messages (Hidden by default) -->
-                                    <div id="alertMessage" class="alert alert-danger alert-dismissible fade d-none" role="alert">
-                                        <i class="fas fa-exclamation-circle me-2"></i>
-                                        <span id="alertText"></span>
-                                        <button type="button" class="btn-close" onclick="closeAlert()"></button>
-                                    </div>
-
-                                    <!-- Login Form -->
-                                    <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
-                                        
-                                        <!-- Email Input -->
-                                        <div class="form-group">
-                                            <label for="email" class="form-label">
-                                                <i class="fas fa-envelope"></i> Email Address
-                                            </label>
-                                            <div class="input-wrapper">
-                                                <input 
-                                                    type="email" 
-                                                    class="form-control" 
-                                                    id="email" 
-                                                    name="email"
-                                                    placeholder="Enter your email"
-                                                    required
-                                                >
-                                                <span class="input-icon">
-                                                    <i class="fas fa-envelope"></i>
-                                                </span>
-                                            </div>
-                                            <div class="invalid-feedback">
-                                                Please enter a valid email address.
-                                            </div>
-                                        </div>
-
-                                        <!-- Password Input -->
-                                        <div class="form-group">
-                                            <label for="password" class="form-label">
-                                                <i class="fas fa-lock"></i> Password
-                                            </label>
-                                            <div class="input-wrapper">
-                                                <input 
-                                                    type="password" 
-                                                    class="form-control" 
-                                                    id="password" 
-                                                    name="password"
-                                                    placeholder="Enter your password"
-                                                    required
-                                                    minlength="6"
-                                                >
-                                                <span class="input-icon">
-                                                    <i class="fas fa-lock"></i>
-                                                </span>
-                                                <button type="button" class="toggle-password" onclick="togglePassword('password')">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                            </div>
-                                            <div class="invalid-feedback">
-                                                Password must be at least 6 characters long.
-                                            </div>
-                                        </div>
-
-                                        <!-- Remember Me & Forgot Password -->
-                                        <div class="form-options">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="remember" name="remember">
-                                                <label class="form-check-label" for="remember">
-                                                    Remember me
-                                                </label>
-                                            </div>
-                                            <a href="#" class="forgot-password">Forgot Password?</a>
-                                        </div>
-
-                                        <!-- Submit Button -->
-                                        <button type="submit" class="btn btn-primary btn-auth" id="loginBtn">
-                                            <span class="btn-text">
-                                                <i class="fas fa-sign-in-alt"></i> Sign In
-                                            </span>
-                                            <span class="btn-loader d-none">
-                                                <i class="fas fa-spinner fa-spin"></i> Signing in...
-                                            </span>
-                                        </button>
-
-                                        <!-- Divider -->
-                                        <div class="divider">
-                                            <span>or continue with</span>
-                                        </div>
-
-                                        <!-- Social Login Buttons -->
-                                        <div class="social-login">
-                                            <button type="button" class="btn btn-social btn-google" onclick="socialLogin('google')">
-                                                <i class="fab fa-google"></i>
-                                                <span>Google</span>
-                                            </button>
-                                            <button type="button" class="btn btn-social btn-facebook" onclick="socialLogin('facebook')">
-                                                <i class="fab fa-facebook-f"></i>
-                                                <span>Facebook</span>
-                                            </button>
-                                        </div>
-
-                                        <!-- Sign Up Link -->
-                                        <div class="auth-footer">
-                                        <p>Don't have an account? <a href="register.php" class="auth-link">Sign Up</a></p>
-                                        <p style="margin-top: 10px;">Or <button onclick="activateGuestMode()" style="background: none; border: none; color: #10b981; font-weight: 600; cursor: pointer; text-decoration: underline;">try as guest</button></p>
-                                    </div>
-
-                                    </form>
-                                </div>
-                            </div>
-
                         </div>
+
+                        <!-- RIGHT -->
+                        <div class="col-lg-6">
+                            <div class="auth-form-wrapper">
+
+                                <h1 class="auth-title">Sign In</h1>
+                                <p class="auth-subtitle">Enter your credentials</p>
+
+                                <!-- ERROR MESSAGE -->
+                                <?php if (!empty($error)) : ?>
+                                    <div class="alert alert-danger">
+                                        <i class="fas fa-exclamation-circle me-2"></i>
+                                        <?= htmlspecialchars($error) ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <!-- ✅ FIXED FORM -->
+                                <form method="POST" action="" class="auth-form">
+
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="email" class="form-control" name="email" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Password</label>
+                                        <input type="password" class="form-control" name="password" required>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-auth">
+                                        <i class="fas fa-sign-in-alt"></i> Sign In
+                                    </button>
+
+                                    <div class="auth-footer mt-3">
+                                        <p>Don't have an account? <a href="register.php">Sign Up</a></p>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- Custom JS -->
-   <script src="js/utils.js"></script>
-    <script src="js/guest-mode.js"></script>
-    <script src="js/auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

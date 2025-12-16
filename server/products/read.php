@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FET - Food Expiry Tracker | Stop Food Waste, Start Smart Living</title>
+    <title>FET | Product List</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- AOS Animation CSS -->
+    <!-- AOS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <!-- Google Fonts -->
@@ -19,6 +19,24 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/landing.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f8fafc;
+        }
+        .product-card {
+            border-radius: 16px;
+            transition: all .3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0,0,0,.08);
+        }
+        .category-badge {
+            background: #10b981;
+        }
+    </style>
 </head>
 <body>
 
@@ -35,45 +53,80 @@ $result = $conn->query("
 ");
 ?>
 
-<div class="container mt-4">
+<div class="container py-5">
 
-    <a href="create.php" class="btn btn-primary mb-3">Add Product</a>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4" data-aos="fade-down">
+        <div>
+            <h2 class="fw-bold">📦 Product Inventory</h2>
+            <p class="text-muted mb-0">Manage your food items efficiently</p>
+        </div>
+        <div>
+            <a href="../categories/read.php" class="btn btn-primary">
+                <i class="fas fa-book me-1"></i> Categories
+            </a>
+            <a href="create.php" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i> Add Product
+            </a>
+        </div>
+    </div>
 
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Category Name</th>
-                <th>Name</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-
-        <tbody>
+    <!-- Product Grid -->
+    <div class="row g-4">
         <?php while($row = $result->fetch_assoc()): ?>
-            <tr>
-                <td><?= $row['product_id']; ?></td>
-                <td><?= $row['category_name']; ?></td>
-                <td><?= $row['product_name']; ?></td>
-                <td>
-                    <a href="update.php?_id=<?= $row['product_id']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="delete.php?_id=<?= $row['product_id']; ?>" onclick="return confirm('Delete?')" class="btn btn-danger btn-sm">Delete</a>
-                </td>
-            </tr>
+        <div class="col-lg-4 col-md-6" data-aos="fade-up">
+            <div class="card product-card h-100">
+                <div class="card-body d-flex flex-column">
+
+                    <span class="badge category-badge mb-2">
+                        <?= htmlspecialchars($row['category_name']); ?>
+                    </span>
+
+                    <h5 class="card-title fw-semibold">
+                        <?= htmlspecialchars($row['product_name']); ?>
+                    </h5>
+
+                    <p class="text-muted small mb-4">
+                        Product ID: <?= $row['product_id']; ?>
+                    </p>
+
+                    <div class="mt-auto d-flex gap-2">
+                        <a href="update.php?_id=<?= $row['product_id']; ?>" class="btn btn-warning btn-sm w-50">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="delete.php?_id=<?= $row['product_id']; ?>"
+                           onclick="return confirm('Delete this product?')"
+                           class="btn btn-danger btn-sm w-50">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
         <?php endwhile; ?>
-        </tbody>
-    </table>
+    </div>
+
+    <?php if ($result->num_rows === 0): ?>
+        <div class="text-center mt-5 text-muted">
+            <i class="fas fa-box-open fa-3x mb-3"></i>
+            <p>No products found.</p>
+        </div>
+    <?php endif; ?>
 
 </div>
 
-<!-- Bootstrap JS -->
+<!-- Bootstrap -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- AOS Animation JS -->
+<!-- AOS -->
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-<!-- Custom JS -->
-<script src="js/landing.js"></script>
+<script>
+    AOS.init({
+        duration: 900,
+        once: true
+    });
+</script>
 
 </body>
 </html>
