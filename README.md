@@ -12,7 +12,7 @@ Food Expiry Tracker adalah website untuk mencatat, memonitor, dan mengelola maka
 ## Deskripsi
 Food Expiry Tracker adalah website yang dapat digunakan dalam kehidupan sehari-hari dengan tujuan membantu pengguna mencatat, memonitor, dan mengelola makanan yang mereka miliki dengan fokus utama pada tanggal kedaluwarsa. Sistem secara otomatis menghitung sisa hari menuju tanggal expired, lalu menampilkan status warna (hijau, kuning, merah) sebagai indikator tingkat urgensi. 
 Tujuan utama pengembangan website ini adalah mencegah food waste, meningkatkan kesadaran pengguna terhadap stok makanan, serta memudahkan manajemen bahan makanan di rumah dengan tampilan yang sederhana, intuitif, dan mudah diakses.
-##  📌Fitur Utana
+##  📌 Fitur Utana
 - 🔹 User Login & Register: menggunakan Laravel Authentication
 - 🔹 Dashboard Data Makanan:
 - 🔹 Tambah Data Makanan
@@ -20,9 +20,21 @@ Tujuan utama pengembangan website ini adalah mencegah food waste, meningkatkan k
 - 🔹 Indikator Status Warna
 - 🔹 Edit & Delete Data Makanan
 - 🔹 Filter Data Berdasarkan Kategori
-## 🔧 Fitur Pendukung
+## 🚀 Fitur Pendukung
 - 🔹 Responsive Design fully Bootstrap
 - 🔹 Landing Page informatif
-- 🔹 Validasi form (frontend + backend)
-- 🔹 Dark/Light mode (opsional minggu akhir)
+- 🔹 Validasi form
+- 🔹 Dark/Light mode 
+## 🧠 Fitur Lanjutan
+- 🔹 Website menyediakan fitur notifikasi email otomatis yang dikirimkan setiap hari pada pukul 08.00 kepada pengguna saat membuka website nya. Email berisi informasi kondisi bahan makanan milik user, yang dikategorikan menjadi fresh, soon expired, dan expired.
+- 🔹 Sistem juga memberikan rekomendasi resep berdasarkan bahan makanan yang hampir kadaluarsa. Tujuan fitur ini adalah membantu pengguna memanfaatkan bahan makanan secara optimal sehingga dapat mengurangi food waste.
+## 🧑‍💻 Bahasa Pemrograman Yang di Gunakan
+- 📄 HTML
+- 🎨 CSS (bootstrap)
+- ⚡ JavaScript
+- 🐘 PHP
+- 🔴 Laravel
+- 📡 REST API
+- 🐬 MySQL
+
 
